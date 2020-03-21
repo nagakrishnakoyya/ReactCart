@@ -16,7 +16,10 @@ body {
     margin: 0px;
     display: flex;
     list-style-type: none;
-    justify-content: space-evenly;
+    justify-content: center;
+}
+.input-fields ul li {
+    padding-right: 20px;
 }
 .cart {
     border: 1px solid #ddd;
@@ -150,21 +153,12 @@ span.cart_icons {
                 this.setState({items},this.calculatePriceCount);
             }
 			
-			 addId = () => {
+            createCartItem = () => {
                 let id = this.refs.addNewId.value;
                 let newItemsId = [...this.state.items, {id}]
                 console.log(newItemsId);
             }
-            addItem = () => {
-                let name = this.refs.addNewItem.value;
-                let newItemsItem = [...this.state.items, {name}]
-                console.log(newItemsItem);
-            }
-            addItemPrice = () => {
-                let price = this.refs.addNewPrice.value;
-                let newItemsPrice = [...this.state.items, {price}]
-                console.log(newItemsPrice);
-            }
+           
 			
             render(){
                 
@@ -173,13 +167,16 @@ span.cart_icons {
                         <div className="input-fields">
                             <ul>
                                 <li>
-                                    <input type="text" ref="addNewId" /><span><button onClick={this.addId}>Add Item ID</button></span>
+                                    <input type="text" ref="addNewId" />
                                 </li>
                                 <li>
-                                    <input type="text" ref="addNewItem" /><span><button onClick={this.addItem}>Add Item</button></span>
+                                    <input type="text" ref="addNewItem" />
                                 </li>
                                 <li>
-                                    <input type="text" ref="addNewPrice" /><span><button onClick={this.addItemPrice}>Add Item Price</button></span>
+                                    <input type="text" ref="addNewItem" />
+                                </li>
+								<li>
+                                    <button onClick={this.createCartItem}>Create New Item</button>
                                 </li>
                             </ul>
                         </div>
