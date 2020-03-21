@@ -93,82 +93,74 @@ span.cart_icons {
                 super();
                 this.state = {
                     items:[
-                                {id:3001,name:'shoe',price:100},
-                                {id:3002,name:'shirt',price:200},
-                                {id:3003,name:'pant',price:300}
+                                {id:3001,name:'shoe',price:100,count:0,itemTotalPrice:0},
+                                {id:3002,name:'shirt',price:200,count:0,itemTotalPrice:0},
+                                {id:3003,name:'pant',price:300,count:0,itemTotalPrice:0}
                           ],
-                    cartItems:	[
-                                    {id:3001,count:0},
-                                    {id:3002,count:0},
-                                    {id:3003,count:0}
-                                ],
                     totalItemsCount:0,
-                    totalCartCost:0,
-                    isDisabled:Boolean
-
+                    totalCartCost:0
                 }
             }
 
 
-            itemsCount = ()=>{
-                var totalCount = 0;
-                for(var i=0;i<=this.state.cartItems.length-1;i++){
-                    totalCount = totalCount + this.state.cartItems[i].count;
-                }
-                this.setState({totalItemsCount:totalCount})
-            }
+            // itemsCount = ()=>{
+            //     var totalCount = 0;
+            //     for(var i=0;i<=this.state.items.length-1;i++){
+            //         totalCount = totalCount + this.state.cartItems[i].count;
+            //     }
+            //     this.setState({totalItemsCount:totalCount})
+            // }
 
 
-            totalPrice= ()=>{
-                var totalCost = 0;
-                var {cartItems,items}=this.state;
-                for(var i=0;i<=cartItems.length-1;i++){
-                    var item = 	items.filter((a)=>{
-                                    return cartItems[i].id==a.id;
-                                })
-                    totalCost = totalCost + (item[0].price*cartItems[i].count)
-                }
-                this.setState({totalCartCost:totalCost})
+            calculatePriceCount= ()=>{
+                var totalCartCost = 0;
+                var totalItemsCount=0;
+                var {items}=this.state;
+                items.forEach((item)=>{
+                    totalCartCost += item.itemTotalPrice;
+                    totalItemsCount += item.count;
+                })
+                // for(var i=0;i<=items.length-1;i++){
+                //     var item = 	items.filter((a)=>{
+                //                     return cartItems[i].id==a.id;
+                //                 })
+                //     totalCost = totalCost + (item[0].price*cartItems[i].count)
+                // }
+                this.setState({totalItemsCount,totalCartCost})
             }
 
             componentDidMount(){
-                this.itemsCount();
-                this.totalPrice();
+                this.calculatePriceCount();
             }
 
             addItem=(e)=>{
                 e.persist();
-                var {cartItems}=this.state;
+                const {items}=this.state;
                 var itemIndex = e.target.dataset.index;
-                cartItems = cartItems.map((a)=>{
+
+                items.forEach((a)=>{
                     if(a.id==itemIndex){
                         a.count++;
+                        a.itemTotalPrice+=a.price;
                     }
                     return a;
-                })
-                this.setState({cartItems:cartItems},()=>{
-                    this.itemsCount();
-                    this.totalPrice();
                 });
+                console.log(items);
+                this.setState({items},this.calculatePriceCount);
             }
             removeItem=(e)=>{
                 e.persist();
-                var {cartItems}=this.state;
+                var {items}=this.state;
                 var itemIndex = e.target.dataset.index;
-                cartItems = cartItems.map((a)=>{
+                items.forEach((a)=>{
                     if(a.id==itemIndex){
-                        let decrement = a.count--;
-                        if(decrement === 0){
-                            isDisabled == true;
-                        }
+                        a.count--;
+                        a.itemTotalPrice-=a.price;
                     }
                     return a;
                 })
                     
-                this.setState({cartItems:cartItems},()=>{
-                    this.itemsCount();
-                    this.totalPrice();
-                });
+                this.setState({items},this.calculatePriceCount);
             }
             render(){
                 
@@ -206,12 +198,12 @@ span.cart_icons {
                                                 <tr>
                                                     <td>{a.id}</td>
                                                     <td>{a.name}</td>
-                                                    <td><button className="btn btn-secondary">{this.state.totalItemsCount}</button></td>
+                                                    <td><button className="btn btn-secondary">{a.count}</button></td>
                                                     <td><span className="cart_icons">X</span></td>
                                                     <td>{a.price}</td>
                                                     <td><span className="cart_icons">=</span></td>
-                                                    <td><button className="btn btn-info">{this.state.totalCartCost}</button></td>
-                                                    <td><button className="btn btn-danger" data-index={a.id} onClick={this.removeItem} >-</button></td>
+                                                    <td><button className="btn btn-info">{a.itemTotalPrice}</button></td>
+                                                    <td><button className="btn btn-danger" data-index={a.id} onClick={this.removeItem} disabled={!(a.count)} >-</button></td>
                                                     <td><button className="btn btn-success" data-index={a.id} onClick={this.addItem}>+</button></td>
                                                 </tr>
                                             );
