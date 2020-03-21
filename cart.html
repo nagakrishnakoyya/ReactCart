@@ -177,6 +177,9 @@ span.cart_icons {
                     const {items}=this.state;
                     items.push(obj);
                     this.setState({items});
+                    this.refs.newId.value =''
+                    this.refs.newItemName.value=''
+                    this.refs.newItemPrice.value=''
                 }else {
                     alert(message)
                 }
