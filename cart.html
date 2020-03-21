@@ -1,0 +1,236 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+
+    <style>
+body {
+    margin-top: 20px;
+}
+.input-fields ul {
+    padding: 0px;
+    margin: 0px;
+    display: flex;
+    list-style-type: none;
+    justify-content: space-evenly;
+}
+.cart {
+    border: 1px solid #ddd;
+    padding: 25px;
+    width: 80%;
+    margin: 20px auto;
+}
+.cart-header {
+    background-color: #4fadff;
+    padding: 10px;
+}
+.cart-header ul {
+    display: flex;
+    padding: 0px;
+    margin: 0px;
+    align-items: center;
+}
+.cart-header ul li {
+    padding-right: 20px;
+    list-style-type: none;
+}
+span.count {
+    color: #ffffff;
+    background-color: #4CAF50;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 13px;
+}
+.cart-header ul li:nth-child(1), .cart-header ul li:nth-child(2) {
+    background-color: #f7f7f7;
+    margin-right: 10px;
+    border-radius: 20px;
+    padding: 5px 15px;
+}
+.cart-header ul li:nth-child(3) {
+    margin-left: auto;
+    padding-right: 0px;
+}
+.cart-body {
+    background-color: #f7f7f7;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+.cart-items ul {
+    display: flex;
+    padding: 0px;
+    margin: 0px;
+    align-items: center;
+}
+.cart-items ul li {
+    padding-right: 10px;
+    list-style-type: none;
+}
+.cart-items ul li:nth-child(2) {
+    margin-left: auto;
+}
+.cart-items ul li:nth-last-child() {
+    padding-right: 0px;
+}
+span.cart_icons {
+    vertical-align: -webkit-baseline-middle;
+}
+    </style>
+</head>
+
+<body>
+    <div id="d1">
+
+    </div>
+
+    <script type="text/babel">
+        class RefEx extends React.Component{
+            constructor(){
+                super();
+                this.state = {
+                    items:[
+                                {id:3001,name:'shoe',price:100},
+                                {id:3002,name:'shirt',price:200},
+                                {id:3003,name:'pant',price:300}
+                          ],
+                    cartItems:	[
+                                    {id:3001,count:0},
+                                    {id:3002,count:0},
+                                    {id:3003,count:0}
+                                ],
+                    totalItemsCount:0,
+                    totalCartCost:0,
+                    isDisabled:Boolean
+
+                }
+            }
+
+
+            itemsCount = ()=>{
+                var totalCount = 0;
+                for(var i=0;i<=this.state.cartItems.length-1;i++){
+                    totalCount = totalCount + this.state.cartItems[i].count;
+                }
+                this.setState({totalItemsCount:totalCount})
+            }
+
+
+            totalPrice= ()=>{
+                var totalCost = 0;
+                var {cartItems,items}=this.state;
+                for(var i=0;i<=cartItems.length-1;i++){
+                    var item = 	items.filter((a)=>{
+                                    return cartItems[i].id==a.id;
+                                })
+                    totalCost = totalCost + (item[0].price*cartItems[i].count)
+                }
+                this.setState({totalCartCost:totalCost})
+            }
+
+            componentDidMount(){
+                this.itemsCount();
+                this.totalPrice();
+            }
+
+            addItem=(e)=>{
+                e.persist();
+                var {cartItems}=this.state;
+                var itemIndex = e.target.dataset.index;
+                cartItems = cartItems.map((a)=>{
+                    if(a.id==itemIndex){
+                        a.count++;
+                    }
+                    return a;
+                })
+                this.setState({cartItems:cartItems},()=>{
+                    this.itemsCount();
+                    this.totalPrice();
+                });
+            }
+            removeItem=(e)=>{
+                e.persist();
+                var {cartItems}=this.state;
+                var itemIndex = e.target.dataset.index;
+                cartItems = cartItems.map((a)=>{
+                    if(a.id==itemIndex){
+                        let decrement = a.count--;
+                        if(decrement === 0){
+                            isDisabled == true;
+                        }
+                    }
+                    return a;
+                })
+                    
+                this.setState({cartItems:cartItems},()=>{
+                    this.itemsCount();
+                    this.totalPrice();
+                });
+            }
+            render(){
+                
+                return (
+                    <div className="parent_class">
+                        
+                    <div className="cart">
+                        <div className="cart-header">
+                            <ul>
+                                <li>Cart Items Count: <span className="count">{this.state.totalItemsCount}</span></li>
+                                <li>Cart Cost: <span className="count">{this.state.totalCartCost}</span></li>
+                                <li><button className="btn btn-warning">Clear Cart</button></li>
+                            </ul>
+                        </div>
+                        <div className="cart-body">
+                            <div className="cart-items">
+                            <table className="table">
+                                <thead>
+                                <tr>
+                                    <th>Item ID</th>
+                                    <th>Item Name</th>
+                                    <th>No of Items</th>
+                                    <th>Symbol</th>
+                                    <th>Item Price</th>
+                                    <th>Symbol</th>
+                                    <th>Total Price</th>
+                                    <th>Remove Item</th>
+                                    <th>Add Item</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        this.state.items.map((a,i) => {
+                                            return (
+                                                <tr>
+                                                    <td>{a.id}</td>
+                                                    <td>{a.name}</td>
+                                                    <td><button className="btn btn-secondary">{this.state.totalItemsCount}</button></td>
+                                                    <td><span className="cart_icons">X</span></td>
+                                                    <td>{a.price}</td>
+                                                    <td><span className="cart_icons">=</span></td>
+                                                    <td><button className="btn btn-info">{this.state.totalCartCost}</button></td>
+                                                    <td><button className="btn btn-danger" data-index={a.id} onClick={this.removeItem} >-</button></td>
+                                                    <td><button className="btn btn-success" data-index={a.id} onClick={this.addItem}>+</button></td>
+                                                </tr>
+                                            );
+                                        })
+                                    }
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                )
+                
+            }
+        }
+        ReactDOM.render(<RefEx />,document.getElementById("d1"));
+    </script>
+
+    
+</body>
+
+</html>
