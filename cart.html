@@ -103,14 +103,6 @@ span.cart_icons {
             }
 
 
-            // itemsCount = ()=>{
-            //     var totalCount = 0;
-            //     for(var i=0;i<=this.state.items.length-1;i++){
-            //         totalCount = totalCount + this.state.cartItems[i].count;
-            //     }
-            //     this.setState({totalItemsCount:totalCount})
-            // }
-
 
             calculatePriceCount= ()=>{
                 var totalCartCost = 0;
@@ -120,12 +112,7 @@ span.cart_icons {
                     totalCartCost += item.itemTotalPrice;
                     totalItemsCount += item.count;
                 })
-                // for(var i=0;i<=items.length-1;i++){
-                //     var item = 	items.filter((a)=>{
-                //                     return cartItems[i].id==a.id;
-                //                 })
-                //     totalCost = totalCost + (item[0].price*cartItems[i].count)
-                // }
+               
                 this.setState({totalItemsCount,totalCartCost})
             }
 
@@ -162,11 +149,40 @@ span.cart_icons {
                     
                 this.setState({items},this.calculatePriceCount);
             }
+			
+			 addId = () => {
+                let id = this.refs.addNewId.value;
+                let newItemsId = [...this.state.items, {id}]
+                console.log(newItemsId);
+            }
+            addItem = () => {
+                let name = this.refs.addNewItem.value;
+                let newItemsItem = [...this.state.items, {name}]
+                console.log(newItemsItem);
+            }
+            addItemPrice = () => {
+                let price = this.refs.addNewPrice.value;
+                let newItemsPrice = [...this.state.items, {price}]
+                console.log(newItemsPrice);
+            }
+			
             render(){
                 
                 return (
                     <div className="parent_class">
-                        
+                        <div className="input-fields">
+                            <ul>
+                                <li>
+                                    <input type="text" ref="addNewId" /><span><button onClick={this.addId}>Add Item ID</button></span>
+                                </li>
+                                <li>
+                                    <input type="text" ref="addNewItem" /><span><button onClick={this.addItem}>Add Item</button></span>
+                                </li>
+                                <li>
+                                    <input type="text" ref="addNewPrice" /><span><button onClick={this.addItemPrice}>Add Item Price</button></span>
+                                </li>
+                            </ul>
+                        </div>
                     <div className="cart">
                         <div className="cart-header">
                             <ul>
